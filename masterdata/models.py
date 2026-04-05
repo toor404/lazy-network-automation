@@ -15,7 +15,7 @@ class LOV(models.Model):
     value = models.CharField(max_length=50)
     
     def __str__(self):
-        return f"{self.id} - {self.type} - {self.value}"
+        return self.value
 
 class MasterData(models.Model):
     ip_address = models.CharField(max_length=20)

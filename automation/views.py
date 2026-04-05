@@ -72,10 +72,10 @@ def push_config(request):
                 ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                 ssh_client.connect(hostname=mangsa.ip_address, username=mangsa.ssh_user, password=mangsa.ssh_pwd, port=mangsa.ssh_port, allow_agent=False, look_for_keys=False, timeout=5)
 
-                vendorna = str(mangsa.device_vendor)
+                vendorna = str(mangsa.device_vendor).strip().lower()
                 
                 
-                if vendorna == 'Ransnet':
+                if vendorna == 'ransnet':
                     conn = ssh_client.invoke_shell()
                     conn.send("enable" + "\n")
                     time.sleep(1)
@@ -147,10 +147,10 @@ def verify_config(request):
                 ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                 ssh_client.connect(hostname=mangsa.ip_address, username=mangsa.ssh_user, password=mangsa.ssh_pwd, port=mangsa.ssh_port, allow_agent=False, look_for_keys=False, timeout=5)
 
-                vendorna = str(mangsa.device_vendor).strip().split(" - ")[-1]
+                vendorna = str(mangsa.device_vendor).strip().lower().strip()
                 print(vendorna)
                 
-                if vendorna == 'Ransnet':
+                if vendorna == 'ransnet':
                     conn = ssh_client.invoke_shell()
                     conn.send("enable" + "\n")
                     time.sleep(1)
@@ -220,7 +220,7 @@ def backup_config(request):
                 ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                 ssh_client.connect(hostname=mangsa.ip_address, username=mangsa.ssh_user, password=mangsa.ssh_pwd, port=mangsa.ssh_port, allow_agent=False, look_for_keys=False, timeout=5)
 
-                vendorna = str(mangsa.device_vendor)
+                vendorna = str(mangsa.device_vendor).strip().lower()
                 now = datetime.now()
                 dt_string = now.strftime("%d-%m-%Y_%H-%M")
 
