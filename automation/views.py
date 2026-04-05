@@ -76,7 +76,7 @@ def push_config(request):
                     conn = ssh_client.invoke_shell()
                     conn.send("enable" + "\n")
                     time.sleep(1)
-                    conn.send("REDACTED_ENABLE_PASSWORD" + "\n")
+                    conn.send(mangsa.enab_pwd + "\n")
                     time.sleep(1)
                     
                     for cmd in confignya:
@@ -151,7 +151,7 @@ def verify_config(request):
                     conn = ssh_client.invoke_shell()
                     conn.send("enable" + "\n")
                     time.sleep(1)
-                    conn.send("REDACTED_ENABLE_PASSWORD" + "\n")
+                    conn.send(mangsa.enab_pwd + "\n")
                     time.sleep(1)
                     
                     for cmd in confignya:
