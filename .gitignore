@@ -1,0 +1,19 @@
+# Virtual environment
+l_env/
+
+# Django
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+
+# Environment / secrets
+.env
+*.env
+
+# OS
+.DS_Store
+
+# Node (static asset build)
+node_modules/
+static/dist/

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- BEGIN #content -->
+<div id="content" class="app-content">
+	<div class="d-flex align-items-center mb-3">
+		<div>
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Pages</a></li>
+				<li class="breadcrumb-item active">{{page}}</li>
+			</ul>
+			<h1 class="page-header mb-0">{{page}}</h1>
+		</div>
+		
+		<div class="ms-auto">
+			<!-- modal-lg -->
+			<button type="button" class="btn btn-outline-theme me-2" data-bs-toggle="modal" data-bs-target="#modalLg">
+				<i class="fa fa-plus-circle fa-fw me-1"></i>Add {{page}}
+			</button>
+
+			<div class="modal fade" id="modalLg">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- BEGIN #formControls -->
+					<div id="formControls" class="mb-0">
+						<h4>Add Data</h4>
+						<div class="card">
+							<div class="card-body pb-2">
+								<form method="POST">
+									{% csrf_token %}
+									<div class="row">
+										<div class="col-xl-6">
+											<div class="form-group mb-3">
+												<label class="form-label" for="device_type">LOV Type</label>
+												<select class="form-select" name ="type" id="device_type">
+													{% for key, lt in lovsT %}
+													<option value="{{key}}">{{lt}}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group mb-3">
+												<label class="form-label" for="value">Value</label>
+												<input type="text" class="form-control" id="value" name="value" placeholder="root" />
+											</div>
+											<button type="submit" class="btn btn-outline-theme btn-lg">Add</button>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="card-arrow">
+								<div class="card-arrow-top-left"></div>
+								<div class="card-arrow-top-right"></div>
+								<div class="card-arrow-bottom-left"></div>
+								<div class="card-arrow-bottom-right"></div>
+							</div>
+						</div>
+					</div>
+					<!-- END #formControls -->
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="card">
+
+			<div class="tab-pane fade show active" id="allTab">
+				<!-- BEGIN table -->
+				<div id="datatable" class="mb-0">
+					<div class="card">
+						<div class="card-body">
+							{{myFilter.}}
+							<table id="datatableDefault" class="table text-nowrap w-100">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>LOV Type</th>
+										<th>Value</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for device in lovs %}
+									<tr>
+										<td>{{forloop.counter}}</td>
+										<td>{{device.type}}</td>
+										<td>{{device.value}}</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="card-arrow">
+							<div class="card-arrow-top-left"></div>
+							<div class="card-arrow-top-right"></div>
+							<div class="card-arrow-bottom-left"></div>
+							<div class="card-arrow-bottom-right"></div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- END table -->
+			</div>
+
+		<div class="card-arrow">
+			<div class="card-arrow-top-left"></div>
+			<div class="card-arrow-top-right"></div>
+			<div class="card-arrow-bottom-left"></div>
+			<div class="card-arrow-bottom-right"></div>
+		</div>
+	</div>
+</div>
+<!-- END #content -->
+{% endblock content %}

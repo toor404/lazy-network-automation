@@ -1,0 +1,108 @@
+{% load static %}
+<!-- BEGIN #sidebar -->
+<div id="sidebar" class="app-sidebar">
+    <!-- BEGIN scrollbar -->
+    <div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
+        <!-- BEGIN menu -->
+        <div class="menu">
+            <div class="menu-header">Navigation</div>
+            <div class="menu-item active">
+                <a href="/" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-cpu"></i></span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="analytics.html" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-bar-chart"></i></span>
+                    <span class="menu-text">Analytics</span>
+                </a>
+            </div>
+            <div class="menu-item has-sub active">
+                <a href="/masterdata" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-grid-3x3"></i></span>
+                    <span class="menu-text">Master Data</span>
+                    <span class="menu-caret"><b class="caret"></b></span>
+                </a>
+                <div class="menu-submenu">
+                    <div class="menu-item {% if request.path == '/masterdata' %}active{% endif %}">
+                        <a href="/masterdata" class="menu-link">
+                            <span class="menu-text">Devices</span>
+                        </a>
+                    </div>
+                    <div class="menu-item {% if request.path == '/masterdata/lov' %}active{% endif %}">
+                        <a href="/masterdata/lov" class="menu-link">
+                            <span class="menu-text">LOV</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu-header">Automation</div>
+
+            <div class="menu-item">
+                <a href="/automation/push_config" class="menu-link">
+                    <span class="menu-icon"><i class="bi bi-terminal-plus"></i></span>
+                    <span class="menu-text">Push Config</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/automation/backup_config" class="menu-link">
+                    <span class="menu-icon"><i class="fa fa-file-code"></i></span>
+                    <span class="menu-text">Backup Config</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="/automation/backup_list" class="menu-link">
+                    <span class="menu-icon"><i class="fa fa-folder"></i></span>
+                    <span class="menu-text">Backup file</span>
+                </a>
+            </div>
+
+            
+
+            <div class="menu-item">
+                <a href="/automation/history" class="menu-link">
+                    <span class="menu-icon"><i class="fa fa-history"></i></span>
+                    <span class="menu-text">History</span>
+                </a>
+            </div>
+
+            <div class="menu-divider"></div>
+            <div class="menu-header">Tools</div>
+
+            <div class="menu-item">
+                <a href="/automation/verify_config" class="menu-link">
+                    <span class="menu-icon"><i class="fa fa-check-circle"></i></span>
+                    <span class="menu-text">Verify Config</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="profile.html" class="menu-link">
+                    <span class="menu-icon"><i class="fa fa-info-circle"></i></span>
+                    <span class="menu-text">Ping</span>
+                </a>
+            </div>
+            <div class="menu-item">
+                <a href="calendar.html" class="menu-link">
+                    <span class="menu-icon"><i class="fa fa-file-archive"></i></span>
+                    <span class="menu-text">Compare File</span>
+                </a>
+            </div>
+
+            <div class="menu-item">
+                <a href="calendar.html" class="menu-link">
+                    <span class="menu-icon"><i class="fa fa-search-plus"></i></span>
+                    <span class="menu-text">SNMP Walk</span>
+                </a>
+            </div>
+
+
+        </div>
+        <!-- END menu -->
+    </div>
+    <!-- END scrollbar -->
+</div>
+<!-- END #sidebar -->

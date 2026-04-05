@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- BEGIN #content -->
+<div id="content" class="app-content">
+	<div class="d-flex align-items-center mb-3">
+		<div>
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">{{head_page}}</a></li>
+				<li class="breadcrumb-item active">{{page}}</li>
+			</ul>
+			<h1 class="page-header mb-0">{{page}}</h1>
+		</div>
+		
+	</div>
+	
+	<div class="card">
+
+			<div class="tab-pane fade show active" id="allTab">
+				<!-- BEGIN table -->
+				<div id="datatable" class="mb-0">
+					<div class="card">
+						<div class="card-body">
+						
+							<table id="datatableDefault" class="table text-nowrap w-100">
+
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Target</th>
+										<th>Status</th>
+										<th>Pool Time</th>
+										<th>Message</th>
+										<th>File</th>
+									</tr>
+								</thead>
+								
+								<tbody>
+									{% for f in fbl %}
+									<tr>
+										<td>{{forloop.counter}}</td>
+										<td>{{f.target}}</td>
+										<td>{{f.status}}</td>
+										<td>{{f.time}}</td>
+										<td>{{f.messages}}</td>
+										<td>
+											<a href="{{f.b_file.url}}" class="btn btn-secondary btn-sm">
+												Download
+											</a>
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="card-arrow">
+							<div class="card-arrow-top-left"></div>
+							<div class="card-arrow-top-right"></div>
+							<div class="card-arrow-bottom-left"></div>
+							<div class="card-arrow-bottom-right"></div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- END table -->
+			</div>
+
+		<div class="card-arrow">
+			<div class="card-arrow-top-left"></div>
+			<div class="card-arrow-top-right"></div>
+			<div class="card-arrow-bottom-left"></div>
+			<div class="card-arrow-bottom-right"></div>
+		</div>
+	</div>
+</div>
+<!-- END #content -->
+{% endblock content %}

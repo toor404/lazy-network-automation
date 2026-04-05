@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- BEGIN #content -->
+<div id="content" class="app-content">
+	<div class="d-flex align-items-center mb-3">
+		<div>
+			<ul class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Pages</a></li>
+				<li class="breadcrumb-item active">{{page}}</li>
+			</ul>
+			<h1 class="page-header mb-0">{{page}}</h1>
+		</div>
+		
+		<div class="ms-auto">
+			<!-- modal-lg -->
+			<button type="button" class="btn btn-outline-theme me-2" data-bs-toggle="modal" data-bs-target="#modalLg">
+				<i class="fa fa-plus-circle fa-fw me-1"></i>Add {{page}}
+			</button>
+
+			<div class="modal fade" id="modalLg">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<!-- BEGIN #formControls -->
+					<div id="formControls" class="mb-0">
+						<h4>Add Data</h4>
+						<div class="card">
+							<div class="card-body pb-2">
+								<form method="POST">
+									{% csrf_token %}
+									<div class="row">
+										<div class="col-xl-6">
+											<div class="form-group mb-3">
+												<label class="form-label" for="ip_address">IP Address</label>
+												<input type="text" name="ip_address" class="form-control" id="ip_address" placeholder="127.0.0.1" />
+											</div>
+											<div class="form-group mb-3">
+												<label class="form-label" for="device_type">Device Type</label>
+												<select class="form-select" name ="device_type" id="device_type">
+													{% for f in fdt %}
+													<option value="{{f.value}}">{{f.value}}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<ul>
+												{% for f in fdt %}
+													<li>{{ f.type }} - {{ f.value }}</li>
+												{% endfor %}
+											</ul>
+											<div class="form-group mb-3">
+												<label class="form-label" for="ssh_user">SSH User</label>
+												<input type="text" class="form-control" id="ssh_user" name="ssh_user" placeholder="root" />
+											</div>
+											<div class="form-group mb-3">
+												<label class="form-label" for="ssh_port">SSH Port</label>
+												<input type="text" class="form-control" id="ssh_port" name="ssh_port" placeholder="22" />
+											</div>
+											<div class="form-group mb-3">
+												<label class="form-label" for="snmp_port">SNMP Port</label>
+												<input type="text" class="form-control" id="snmp_port" name="snmp_port" placeholder="161" />
+											</div>
+											<button type="submit" class="btn btn-outline-theme btn-lg">Add</button>
+										</div>
+										<div class="col-xl-6">
+											<div class="form-group mb-3">
+												<label class="form-label" for="device_name">Name</label>
+												<input type="text" class="form-control" id="device_name" name="device_name" placeholder="Router Core HQ" />
+											</div>
+											<div class="form-group mb-3">
+												<label class="form-label" for="device_vendor">Device Vendor</label>
+												<select class="form-select" id="device_vendor" name="device_vendor">
+													{% for vendor in fdv %}
+													<option value="{{vendor.value}}">{{vendor.value}}<option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="form-group mb-3">
+												<label for="ssh_password">SSH Password</label>
+												<input type="password" id="ssh_password" name="ssh_password" class="form-control" aria-describedby="passwordHelpBlock">
+											</div>
+											<div class="form-group mb-3">
+												<label class="form-label" for="snmp_community">SNMP Community</label>
+												<input type="text" class="form-control" id="snmp_community" name="snmp_community" placeholder="public" />
+											</div>
+							
+											<div class="form-group mb-3">
+												<label for="snmp_password">SNMP Password</label>
+												<input type="password" id="snmp_password" name="snmp_password" class="form-control" aria-describedby="passwordHelpBlock">
+											</div>
+											<div class="form-group mb-3">
+												<label class="form-label" for="snmp_ver">SNMP Version</label>
+												<select class="form-select" name ="snmp_ver" id="snmp_ver">
+													{% for snmp in fsnmp %}
+													<option value="{{snmp.value}}">{{snmp.value}}<option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="card-arrow">
+								<div class="card-arrow-top-left"></div>
+								<div class="card-arrow-top-right"></div>
+								<div class="card-arrow-bottom-left"></div>
+								<div class="card-arrow-bottom-right"></div>
+							</div>
+						</div>
+					</div>
+					<!-- END #formControls -->
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="card">
+
+			<div class="tab-pane fade show active" id="allTab">
+				<!-- BEGIN table -->
+				<div id="datatable" class="mb-0">
+					<div class="card">
+						<div class="card-body">
+							{{myFilter.}}
+							<table id="datatableDefault" class="table text-nowrap w-100">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>IP Address</th>
+										<th>Name</th>
+										<th>Device Type</th>
+										<th>Vendor</th>
+										<th>Input Date</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for device in all_device %}
+									<tr>
+										<td>{{forloop.counter}}</td>
+										<td>{{device.ip_address}}</td>
+										<td>{{device.name}}</td>
+										<td>{{device.device_type}}</td>
+										<td>{{device.device_vendor}}</td>
+										<td>{{device.created}}</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<div class="card-arrow">
+							<div class="card-arrow-top-left"></div>
+							<div class="card-arrow-top-right"></div>
+							<div class="card-arrow-bottom-left"></div>
+							<div class="card-arrow-bottom-right"></div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- END table -->
+			</div>
+
+		<div class="card-arrow">
+			<div class="card-arrow-top-left"></div>
+			<div class="card-arrow-top-right"></div>
+			<div class="card-arrow-bottom-left"></div>
+			<div class="card-arrow-bottom-right"></div>
+		</div>
+	</div>
+</div>
+<!-- END #content -->
+{% endblock content %}
