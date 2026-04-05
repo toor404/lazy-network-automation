@@ -2,6 +2,33 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Stack
+
+This project primarily uses Python (Django) with HTML templates and Markdown documentation. Always use Python 3 conventions and Django best practices.
+
+- **Backend:** Python 3.10+, Django 6.x
+- **Frontend:** HTML templates (Bootstrap-based), no JS framework
+- **Database:** SQLite (dev), PostgreSQL (prod)
+- **Key libs:** Paramiko (SSH), django-filter, python-decouple, requests
+
+## Platform Awareness
+
+When suggesting shell commands, always check for OS/platform differences. Prefer cross-platform Python solutions over platform-specific shell commands when possible.
+
+- `ping`: macOS uses `-W` in milliseconds, Linux in seconds, Windows uses `-n` (count) and `-w` (timeout ms)
+- `snmpwalk`: macOS path is `/opt/homebrew/bin/snmpwalk` or `/usr/local/bin/snmpwalk`; Linux `/usr/bin/snmpwalk`; Windows requires net-snmp installer
+- Use `platform.system()` to detect OS at runtime — already done in `automation/views.py` for ping and SNMP walk
+- Always use `l_env/bin/python` directly (not `python` or `source activate`) since shell state doesn't persist between Bash calls
+
+## Tool Usage Constraints
+
+Never attempt to run interactive CLI commands directly (e.g., `gh auth login`, `ssh-keygen` with prompts, `git rebase -i`). Instead, provide the exact command for the user to run manually using the `! <command>` prefix in the prompt, or use non-interactive flags/environment variables where available.
+
+Before any destructive git operation (filter-repo, reset --hard, rebase), always create a backup branch first:
+```bash
+git branch backup-$(date +%s)
+```
+
 ## Project Overview
 
 **Lazy Network Automation** — a Django web application for managing and automating network device configuration via SSH (Paramiko). It allows users to push configs, verify configs, backup configs, and monitor devices across a managed device inventory.
