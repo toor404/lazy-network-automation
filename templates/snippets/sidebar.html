@@ -79,21 +79,20 @@
                 </a>
             </div>
 
-            <div class="menu-item">
-                <a href="profile.html" class="menu-link">
+            <div class="menu-item {% if request.path == '/automation/ping/' %}active{% endif %}">
+                <a href="/automation/ping/" class="menu-link">
                     <span class="menu-icon"><i class="fa fa-info-circle"></i></span>
                     <span class="menu-text">Ping</span>
                 </a>
             </div>
-            <div class="menu-item">
-                <a href="calendar.html" class="menu-link">
+            <div class="menu-item {% if request.path == '/automation/compare_file/' %}active{% endif %}">
+                <a href="/automation/compare_file/" class="menu-link">
                     <span class="menu-icon"><i class="fa fa-file-archive"></i></span>
                     <span class="menu-text">Compare File</span>
                 </a>
             </div>
-
-            <div class="menu-item">
-                <a href="calendar.html" class="menu-link">
+            <div class="menu-item {% if request.path == '/automation/snmp_walk/' %}active{% endif %}">
+                <a href="/automation/snmp_walk/" class="menu-link">
                     <span class="menu-icon"><i class="fa fa-search-plus"></i></span>
                     <span class="menu-text">SNMP Walk</span>
                 </a>

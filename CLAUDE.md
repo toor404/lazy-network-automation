@@ -47,7 +47,7 @@ python manage.py shell
 
 ### Database
 
-PostgreSQL (`lazy` database, user `lazymin`, port 5432 on localhost). A commented-out MySQL config is also present in `settings.py`.
+SQLite (`db.sqlite3`) for development. PostgreSQL config is commented out in `settings.py` for future production use.
 
 ### Templates
 
@@ -70,3 +70,22 @@ In `automation/views.py`, device vendor is checked by string-comparing `str(mang
 | Teltonika | Linux shell | Busybox/OpenWRT-based; standard Unix commands |
 
 When adding a new vendor, add a branch in the `if vendorna == ...` block for each operation (push, verify, backup). Extract the vendor string with `.strip().split(" - ")[-1]` (already done in `verify_config`) and compare case-insensitively (`vendorna.lower()`). Consider refactoring repeated SSH connection and vendor dispatch into a shared utility to avoid duplicating the pattern across all three operation views.
+
+## GitHub Workflow
+
+**Every change must be pushed to GitHub with a clear description.** After completing any code change:
+
+```bash
+git add <changed files>
+git commit -m "short summary
+
+- bullet describing what changed and why
+- another bullet if needed"
+git push origin main
+```
+
+Commit message rules:
+- First line: short imperative summary (`Add ping tool`, `Fix SNMP walk timeout`, `Refactor SSH vendor dispatch`)
+- Body bullets: what changed, which files, and why — enough context for someone reading the history to understand without looking at the diff
+- Never use vague messages like `fix`, `update`, or `changes`
+- One logical change per commit — don't bundle unrelated edits

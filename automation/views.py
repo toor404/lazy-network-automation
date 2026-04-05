@@ -14,6 +14,9 @@ from .filters import OrderFilter, LogFilter
 import paramiko
 import time
 import os
+import subprocess
+import difflib
+import platform
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -295,6 +298,148 @@ def fb_list(request):
     }
 
     return render(request, 'backup_files.html', context)
-    
 
 
+@login_required(login_url='/login')
+def ping_tool(request):
+    results = []
+    all_device = MasterData.objects.all()
+    myFilter = OrderFilter(request.GET, queryset=all_device)
+    all_device = myFilter.qs
+
+    if request.method == 'POST':
+        targets = request.POST.getlist('pushgw')
+        os_name = platform.system()
+        for pk in targets:
+            device = get_object_or_404(MasterData, pk=pk)
+            try:
+                if os_name == 'Windows':
+                    cmd = ['ping', '-n', '4', '-w', '2000', device.ip_address]
+                elif os_name == 'Darwin':
+                    cmd = ['ping', '-c', '4', '-W', '2000', device.ip_address]
+                else:  # Linux
+                    cmd = ['ping', '-c', '4', '-W', '2', device.ip_address]
+                proc = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+                output = proc.stdout or proc.stderr
+                status = 'Success' if proc.returncode == 0 else 'Unreachable'
+            except Exception as e:
+                output = str(e)
+                status = 'Error'
+            results.append({'device': device, 'output': output, 'status': status})
+
+        return render(request, 'ping.html', {
+            'title': 'Lazy Network Automation',
+            'head_page': 'Tools',
+            'page': 'Ping',
+            'results': results,
+            'all_device': all_device,
+            'myFilter': myFilter,
+        })
+
+    return render(request, 'ping.html', {
+        'title': 'Lazy Network Automation',
+        'head_page': 'Tools',
+        'page': 'Ping',
+        'all_device': all_device,
+        'myFilter': myFilter,
+    })
+
+
+@login_required(login_url='/login')
+def snmp_walk(request):
+    result = ''
+    all_device = MasterData.objects.all()
+
+    if request.method == 'POST':
+        pk = request.POST.get('device')
+        oid = request.POST.get('oid', '1.3.6.1.2.1.1').strip() or '1.3.6.1.2.1.1'
+        device = get_object_or_404(MasterData, pk=pk)
+        snmp_ver = str(device.snmp_ver).strip().split(' - ')[-1]
+        community = device.snmp_community or 'public'
+        port = str(device.snmp_port or 161)
+
+        if snmp_ver in ('v3', 'SNMPv3', 'snmpv3'):
+            result = 'SNMPv3 not yet supported — use v1 or v2c.'
+        else:
+            version_flag = '2c' if '2' in snmp_ver else '1'
+            os_name = platform.system()
+            # Common snmpwalk paths per OS
+            snmpwalk_candidates = ['snmpwalk']
+            if os_name == 'Darwin':
+                snmpwalk_candidates += [
+                    '/opt/homebrew/bin/snmpwalk',
+                    '/usr/local/bin/snmpwalk',
+                ]
+            elif os_name == 'Windows':
+                snmpwalk_candidates += [
+                    r'C:\usr\bin\snmpwalk.exe',
+                    r'C:\net-snmp\bin\snmpwalk.exe',
+                ]
+            else:
+                snmpwalk_candidates += ['/usr/bin/snmpwalk']
+
+            snmpwalk_bin = None
+            for candidate in snmpwalk_candidates:
+                if os.path.isfile(candidate) or candidate == 'snmpwalk':
+                    snmpwalk_bin = candidate
+                    break
+
+            try:
+                proc = subprocess.run(
+                    [snmpwalk_bin, '-v', version_flag, '-c', community,
+                     '-p', port, device.ip_address, oid],
+                    capture_output=True, text=True, timeout=30
+                )
+                result = proc.stdout or proc.stderr or 'No output.'
+            except FileNotFoundError:
+                install_hint = {
+                    'Darwin': 'brew install net-snmp',
+                    'Windows': 'Download from http://www.net-snmp.org/download.html',
+                }.get(os_name, 'sudo apt install snmp  # or  sudo yum install net-snmp-utils')
+                result = f'snmpwalk not found.\nInstall: {install_hint}'
+            except Exception as e:
+                result = str(e)
+
+    return render(request, 'snmp_walk.html', {
+        'title': 'Lazy Network Automation',
+        'head_page': 'Tools',
+        'page': 'SNMP Walk',
+        'all_device': all_device,
+        'result': result,
+    })
+
+
+@login_required(login_url='/login')
+def compare_file(request):
+    diff_html = ''
+    files = BackupConfig.objects.all().order_by('-time')
+
+    if request.method == 'POST':
+        file1_id = request.POST.get('file1')
+        file2_id = request.POST.get('file2')
+        try:
+            f1 = get_object_or_404(BackupConfig, pk=file1_id)
+            f2 = get_object_or_404(BackupConfig, pk=file2_id)
+            path1 = os.path.join('media', str(f1.b_file))
+            path2 = os.path.join('media', str(f2.b_file))
+            with open(path1) as a, open(path2) as b:
+                lines1 = a.readlines()
+                lines2 = b.readlines()
+            diff = difflib.unified_diff(
+                lines1, lines2,
+                fromfile=str(f1.b_file),
+                tofile=str(f2.b_file),
+            )
+            diff_html = ''.join(diff) or 'Files are identical.'
+        except FileNotFoundError as e:
+            diff_html = f'File not found: {e}'
+        except Exception as e:
+            diff_html = str(e)
+
+    return render(request, 'compare_file.html', {
+        'title': 'Lazy Network Automation',
+        'head_page': 'Tools',
+        'page': 'Compare File',
+        'files': files,
+        'diff_html': diff_html,
+    })

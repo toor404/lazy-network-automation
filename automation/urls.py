@@ -9,6 +9,8 @@ urlpatterns = [
     path('verify_config/', views.verify_config),
     path('history/', views.history),
     path('push_config/', views.push_config),
+    path('ping/', views.ping_tool),
+    path('snmp_walk/', views.snmp_walk),
+    path('compare_file/', views.compare_file),
     path('', views.index),
-    
 ]
